@@ -3,6 +3,7 @@
 from subprocess import call
 import sys
 import json
+import requests
 
 # To match the strings
 import fuzzyset
@@ -28,20 +29,30 @@ class SecurePack:
 
     # return false if match and true if otherwise
     def match(self):
-        if self.usrin[1] == "install":
-            # Opens the file containing top 1000 packages
-            with open("newDC.json", "r") as f:
-                matchlist = list(json.load(f).keys())
-            # if the package is not popular
-            if self.usrin[2] not in matchlist and len(self.usrin[2]) != 1:
-                # Extract first two closely matched strings
-                matchlist = fuzzyset.FuzzySet(matchlist)
-                match = "-- " + "\n-- ".join([x[1] for x in matchlist.get(self.usrin[2])])
-                # if using fuzzywuzzy
-                #match = ", ".join([i[0] for i in process.extract(usrin[2], li, limit=2)])
-                print(f"Following are the closely matched popular packages:\n{match}")
-                return False
+        # Opens the file containing top 1000 packages
+        with open("newDC.json", "r") as f:
+            matchlist = list(json.load(f).keys())
+        # if the package is not popular
+        if self.usrin[2] not in matchlist and len(self.usrin[2]) != 1:
+            # Extract first two closely matched strings
+            matchlist = fuzzyset.FuzzySet(matchlist)
+            match = "-- " + "\n-- ".join([x[1] for x in matchlist.get(self.usrin[2])])
+            # if using fuzzywuzzy
+            #match = ", ".join([i[0] for i in process.extract(usrin[2], li, limit=2)])
+            print(f"Following are the closely matched popular packages:\n{match}")
+            return False
         return True
+
+    # Gives the last modified year
+    @property
+    def abandoned(self):
+        try:
+            r = requests.get('https://replicate.npmjs.com/'
+            + self.usrin[2]).json()["time"]["modified"][:4]
+            return int(r)
+        except:
+            print("Something went wrong, try again")
+            return 0
 
 # Decisition function
 def decide():
@@ -62,9 +73,18 @@ def securepack():
         usrin.__usage__()
     else:
         # Match with the top 1000 packages
-        if usrin.match():
-            # Call the command otherwise
-            usrin.__call__()
-        elif decide():
-            # Call the command if yes
-            usrin.__call__()
+        # If the option is install
+        if usrin.usrin[1] == "install":
+            if usrin.match():
+                usrin.__call__()
+            elif decide():
+                # Call the command if yes
+                usrin.__call__()
+        # Tells if the package is abandoned
+        elif usrin.usrin[1] == "--abandoned":
+            # Sets the date as 2018, so packages which are not
+            # modified before 2018 are considered abandoned
+            if (usrin.abandoned) < 2018:
+                print("The package is abandoned")
+            else:
+                print("The package is being maintained frequently")

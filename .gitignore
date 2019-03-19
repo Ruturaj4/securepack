@@ -1,3 +1,5 @@
 download_daemon.py
 __pycache__/
 *.json
+*.out
+node_modules/
