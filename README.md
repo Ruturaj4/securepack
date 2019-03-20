@@ -10,7 +10,7 @@ install
 
 Install the latest version of this tool::
 
-  $ git clone https://github.com/Ruturaj4/securepack
+    $ git clone https://github.com/Ruturaj4/securepack
 
 It will be available on pypi soon.
 
