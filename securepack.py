@@ -110,9 +110,11 @@ def securepack():
     if not usrin.__check__():
         usrin.__usage__()
     else:
+        if usrin.usrin[1] == "--help":
+            print("Help needed")
         # Matches with the top 1000 packages
         # If the option is install
-        if usrin.usrin[1] == "--install":
+        elif usrin.usrin[1] == "--install":
             if usrin.match():
                 usrin.__call__()
             elif decide():
