@@ -1,3 +1,5 @@
+# Author: Ruturaj Kiran Vaidya
+
 # This is the main file
 # can be used with npm
 from subprocess import call
@@ -13,7 +15,7 @@ import fuzzyset
 
 class SecurePack:
     def __init__(self, usrin):
-        # Get the user input
+        # Gets the user input
         self.usrin = usrin
 
     def __usage__(self):
@@ -28,11 +30,14 @@ class SecurePack:
     def __call__(self):
         call(" ".join(self.usrin), shell=True)
 
-    # return false if match and true if otherwise
+    # returns false if match and true if otherwise
     def match(self):
-        # Opens the file containing top 1000 packages
-        with open("newDC.json", "r") as f:
-            matchlist = list(json.load(f).keys())
+        try:
+            # Opens the file containing top 1000 packages
+            matchlist = requests.get('https://ruturaj4.github.io/downloads/npm_download_counts.json').json()
+        except:
+            print("Something went wrong, try again")
+            return False
         # if the package is not popular
         if self.usrin[2] not in matchlist and len(self.usrin[2]) != 1:
             # Extract first two closely matched strings
@@ -75,7 +80,7 @@ class SecurePack:
             return r
         except:
             print("Something went wrong, try again")
-            return {}
+            return [{}]
     # Gives the project repo, if present
     @property
     def repository(self):
@@ -85,7 +90,7 @@ class SecurePack:
             return r
         except:
             print("Something went wrong, try again")
-            return {}
+            return [{}]
 
 # Decisition function
 def decide():
@@ -99,19 +104,19 @@ def decide():
 
 # Starts here
 def securepack():
-    # Get the user input
+    # Gets the user input
     usrin = SecurePack(sys.argv[1:])
-    # Check if the input command is valid
+    # Checks if the input command is valid
     if not usrin.__check__():
         usrin.__usage__()
     else:
-        # Match with the top 1000 packages
+        # Matches with the top 1000 packages
         # If the option is install
         if usrin.usrin[1] == "--install":
             if usrin.match():
                 usrin.__call__()
             elif decide():
-                # Call the command if yes
+                # Calls the command if yes
                 usrin.__call__()
         # Tells if the package is abandoned
         elif usrin.usrin[1] == "--abandoned":
@@ -121,15 +126,12 @@ def securepack():
                 print("The package is abandoned")
             else:
                 print("The package is being maintained frequently")
-        # To get the download counts
+        # Gets the download counts
         elif usrin.usrin[1] == "--download-counts":
-            try:
-                print(f"Total downloads (last month) - {usrin.usrin[2]}: {usrin.downloadCounts}")
-            except:
-                print("Something went wrong!")
-        # Get the list of maintainers in json
+            print(f"Total downloads (last month) - {usrin.usrin[2]}: {usrin.downloadCounts}")
+        # Gets the list of maintainers in json
         elif usrin.usrin[1] == "--maintainers":
-                print(usrin.maintainers)
-        # Get the package repository
+            print(usrin.maintainers)
+        # Gets the package repository
         elif usrin.usrin[1] == "--repository":
-                print(usrin.repository)
+            print(usrin.repository)
