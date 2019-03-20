@@ -5,7 +5,7 @@ SecurePack helps in downloading packages securely.
 
 Currently supported for npm.
 
-install
+Install
 -------
 
 Install the latest version of this tool:
@@ -44,4 +44,4 @@ Package repository:
 Bugs
 -------
   Package is still in primary stage.
-  You can report bugs/ issues [here](https://github.com/Ruturaj4/securepack/issues)
+  You can report bugs/ issues [here](https://github.com/Ruturaj4/securepack/issues).
