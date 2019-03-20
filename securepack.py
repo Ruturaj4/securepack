@@ -4,6 +4,7 @@ from subprocess import call
 import sys
 import json
 import requests
+from datetime import date
 
 # To match the strings
 import fuzzyset
@@ -48,8 +49,20 @@ class SecurePack:
     def abandoned(self):
         try:
             r = requests.get('https://replicate.npmjs.com/'
-            + self.usrin[2]).json()["time"]["modified"][:4]
+                + self.usrin[2]).json()["time"]["modified"][:4]
             return int(r)
+        except:
+            print("Something went wrong, try again")
+            return 0
+
+    # Gives the download counts
+    @property
+    def downloadCounts(self):
+        today = date.today().strftime('%Y-%m-%d')
+        try:
+            r = requests.get('https://api.npmjs.org/downloads/point/last-month/'
+                + self.usrin[2]).json()["downloads"]
+            return r
         except:
             print("Something went wrong, try again")
             return 0
@@ -74,7 +87,7 @@ def securepack():
     else:
         # Match with the top 1000 packages
         # If the option is install
-        if usrin.usrin[1] == "install":
+        if usrin.usrin[1] == "--install":
             if usrin.match():
                 usrin.__call__()
             elif decide():
@@ -88,3 +101,9 @@ def securepack():
                 print("The package is abandoned")
             else:
                 print("The package is being maintained frequently")
+        # To get the download counts
+        elif usrin.usrin[1] == "--download-counts":
+            try:
+                print(f"Total downloads (last month) - {usrin.usrin[2]}: {usrin.downloadCounts}")
+            except:
+                print("Something went wrong!")
