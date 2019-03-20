@@ -66,6 +66,26 @@ class SecurePack:
         except:
             print("Something went wrong, try again")
             return 0
+    # Gives the package maintainers
+    @property
+    def maintainers(self):
+        try:
+            r = requests.get('https://replicate.npmjs.com/'
+                + self.usrin[2]).json()["maintainers"]
+            return r
+        except:
+            print("Something went wrong, try again")
+            return {}
+    # Gives the project repo, if present
+    @property
+    def repository(self):
+        try:
+            r = requests.get('https://replicate.npmjs.com/'
+                + self.usrin[2]).json()["repository"]["url"]
+            return r
+        except:
+            print("Something went wrong, try again")
+            return {}
 
 # Decisition function
 def decide():
@@ -107,3 +127,9 @@ def securepack():
                 print(f"Total downloads (last month) - {usrin.usrin[2]}: {usrin.downloadCounts}")
             except:
                 print("Something went wrong!")
+        # Get the list of maintainers in json
+        elif usrin.usrin[1] == "--maintainers":
+                print(usrin.maintainers)
+        # Get the package repository
+        elif usrin.usrin[1] == "--repository":
+                print(usrin.repository)
