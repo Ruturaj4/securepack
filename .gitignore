@@ -3,3 +3,5 @@ __pycache__/
 *.json
 *.out
 node_modules/
+*.egg-info/
+dist/
