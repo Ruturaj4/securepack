@@ -24,7 +24,12 @@ class SecurePack:
     # Checks the command and returns usage if false
     def __check__(self):
         # if not npm then usage
-        return self.usrin[0] == "npm"
+        try:
+            self.usrin[0]
+        except:
+            return 0
+        else:
+            return self.usrin[0] == "npm"
 
     # Calls the command
     def __call__(self):

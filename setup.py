@@ -1,19 +1,23 @@
-from setuptools import setup
+import setuptools
 
 with open("README.md", "r") as f:
     long_description = f.read()
 
-setup(
+setuptools.setup(
     name='securepack',
-    version='0.0.1',
+    version='0.0.3',
     author="Ruturaj Kiran Vaidya",
     author_email="ruturajkvaidya@gmail.com",
-    description="Securepack helps securing packages from typosquatting attack
-",
+    description="Securepack helps securing packages from typosquatting attack",
     long_description_content_type="text/markdown",
     url="https://github.com/Ruturaj4/securepack",
     packages=setuptools.find_packages(),
     long_description=long_description,
+    entry_points={
+        'console_scripts': [
+            'securepack=securepack.securepack:securepack'
+        ]
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

@@ -1,1 +1,1 @@
-name = "securepack"
+import securepack
