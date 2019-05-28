@@ -1,6 +1,0 @@
-setup.py
-securepack.egg-info/PKG-INFO
-securepack.egg-info/SOURCES.txt
-securepack.egg-info/dependency_links.txt
-securepack.egg-info/entry_points.txt
-securepack.egg-info/top_level.txt
