@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name='securepack',
-    version='0.0.3',
+    version='0.0.5',
     author="Ruturaj Kiran Vaidya",
     author_email="ruturajkvaidya@gmail.com",
     description="Securepack helps securing packages from typosquatting attack",
@@ -15,15 +15,17 @@ setuptools.setup(
     long_description=long_description,
     entry_points={
         'console_scripts': [
-            'securepack=securepack.securepack:securepack'
+            'securepack=securepack.__main__:main'
         ]
     },
     classifiers=[
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
     install_requires=[
-       'fuzzyset>=0.0.18',
+       'fuzzyset',
+       'python-levenshtein',
+       'texttable'
     ]
 )

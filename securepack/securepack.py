@@ -19,27 +19,34 @@ class SecurePack:
         self.usrin = usrin
 
     def __usage__(self):
-        print("....\nUsage:\n\n$ python main.py npm options\n....")
+        print("....\nUsage:\n\n$ python main.py npm/pypi options\n....")
 
     # Checks the command and returns usage if false
     def __check__(self):
         # if not npm then usage
         try:
             self.usrin[0]
+            self.usrin[1]
         except:
             return 0
         else:
-            return self.usrin[0] == "npm"
+            # Check it for npm as well as pip
+            return self.usrin[0] == "npm" or self.usrin[0] == "pip"
 
     # Calls the command
     def __call__(self):
+        print(" ".join(self.usrin))
         call(" ".join(self.usrin), shell=True)
 
     # returns false if match and true if otherwise
     def match(self):
         try:
             # Opens the file containing top 1000 packages
-            matchlist = requests.get('https://ruturaj4.github.io/downloads/npm_download_counts.json').json()
+            # Todo: I have to do the same thing for pypi
+            if self.usrin[0] == "npm":
+                matchlist = requests.get('https://ruturaj4.github.io/downloads/npm_download_counts.json').json()
+            elif self.usrin[0] == "pip":
+                matchlist = requests.get('https://ruturaj4.github.io/downloads/pypi_download_counts.json').json()
         except:
             print("Something went wrong, try again")
             return False
@@ -116,10 +123,12 @@ def securepack():
         usrin.__usage__()
     else:
         if usrin.usrin[1] == "--help":
-            print("Help needed")
+            # Todo: give a relative path to the readmefile
+            print("Readme for information")
         # Matches with the top 1000 packages
         # If the option is install
         elif usrin.usrin[1] == "--install":
+            usrin.usrin[1] = "install"
             if usrin.match():
                 usrin.__call__()
             elif decide():
