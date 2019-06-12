@@ -161,8 +161,11 @@ def securepack():
         elif usrin.usrin[1] == "--abandoned":
             # Sets the date as 2018, so packages which are not
             # modified before 2018 are considered abandoned
-            if (usrin.abandoned) < 2018:
-                print("The package is abandoned")
+            abandonment = usrin.abandoned
+            if (abandonment) < 2018 and (abandonment) > 0:
+                print("The package seems to be abandoned")
+            elif (abandonment) == 0:
+                pass
             else:
                 print("The package is being maintained frequently")
         # Gets the download counts
