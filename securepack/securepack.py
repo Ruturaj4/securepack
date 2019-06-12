@@ -19,7 +19,7 @@ class SecurePack:
         self.usrin = usrin
 
     def __usage__(self):
-        print("....\nUsage:\n\n$ python main.py npm/pypi options\n....")
+        print("....\nUsage:\n\n$ python main.py npm/pip options\n....")
 
     # Checks the command and returns usage if false
     def __check__(self):
@@ -54,6 +54,7 @@ class SecurePack:
         if self.usrin[2] not in matchlist and len(self.usrin[2]) != 1:
             # Extract first two closely matched strings
             matchlist = fuzzyset.FuzzySet(matchlist)
+            print(f"matchlist: {matchlist.get(self.usrin[2])}")
             match = "-- " + "\n-- ".join([x[1] for x in matchlist.get(self.usrin[2])])
             # if using fuzzywuzzy
             #match = ", ".join([i[0] for i in process.extract(usrin[2], li, limit=2)])
@@ -65,8 +66,14 @@ class SecurePack:
     @property
     def abandoned(self):
         try:
-            r = requests.get('https://replicate.npmjs.com/'
-                + self.usrin[2]).json()["time"]["modified"][:4]
+            if self.usrin[0] == "npm":
+                r = requests.get('https://replicate.npmjs.com/'
+                    + self.usrin[2]).json()["time"]["modified"][:4]
+            elif self.usrin[0] == "pip":
+                r = requests.get('https://pypi.org/pypi/'
+                        + self.usrin[2] + '/json').json()
+                r = r["releases"][r["info"]["version"]][-1]["upload_time"].split("T")[0][:4]
+                print(f"Last update: {r}")
             return int(r)
         except:
             print("Something went wrong, try again")
@@ -77,8 +84,12 @@ class SecurePack:
     def downloadCounts(self):
         today = date.today().strftime('%Y-%m-%d')
         try:
-            r = requests.get('https://api.npmjs.org/downloads/point/last-month/'
-                + self.usrin[2]).json()["downloads"]
+            if self.usrin[0] == "npm":
+                r = requests.get('https://api.npmjs.org/downloads/point/last-month/'
+                    + self.usrin[2]).json()["downloads"]
+            elif self.usrin[0] == "pip":
+                r = requests.get('https://pypistats.org/api/packages/'
+                    + self.usrin[2] + "/recent").json()["data"]["last_month"]
             return r
         except:
             print("Something went wrong, try again")
@@ -87,18 +98,27 @@ class SecurePack:
     @property
     def maintainers(self):
         try:
-            r = requests.get('https://replicate.npmjs.com/'
-                + self.usrin[2]).json()["maintainers"]
+            if self.usrin[0] == "npm":
+                r = requests.get('https://replicate.npmjs.com/'
+                    + self.usrin[2]).json()["maintainers"]
+            elif self.usrin[0] == "pip":
+                r = requests.get('https://pypi.org/pypi/'
+                        + self.usrin[2] + '/json').json()["info"]["maintainer"]
             return r
         except:
             print("Something went wrong, try again")
             return [{}]
+
     # Gives the project repo, if present
     @property
     def repository(self):
         try:
-            r = requests.get('https://replicate.npmjs.com/'
-                + self.usrin[2]).json()["repository"]["url"]
+            if self.usrin[0] == "npm":
+                r = requests.get('https://replicate.npmjs.com/'
+                    + self.usrin[2]).json()["repository"]["url"]
+            elif self.usrin[0] == "pip":
+                r = requests.get('https://pypi.org/pypi/'
+                        + self.usrin[2] + '/json').json()["info"]["home_page"]
             return r
         except:
             print("Something went wrong, try again")
@@ -113,6 +133,9 @@ def decide():
             return True
         elif decision == "n":
             return False
+
+def editdistance():
+    pass
 
 # Starts here
 def securepack():

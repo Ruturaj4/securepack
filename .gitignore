@@ -9,3 +9,4 @@ build/
 # Python files
 download_daemon_pypi.py
 download_daemon.py
+scoring-pypi.py
