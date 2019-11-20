@@ -5,14 +5,20 @@ SecurePack helps in downloading packages securely.
 
 Currently supported for npm.
 
+Project Organization
+------------
+
+    ├── LICENSE
+    ├── README.md          <- The top-level README for developers using this project.
+    ├── docs               <- securepack documentation
+    ├── securepack         <- Main module
+
 Install
 -------
 
 Install the latest version of this tool:
 
     $ git clone https://github.com/Ruturaj4/securepack
-
-It will be available on pypi soon.
 
 Usage
 -------
@@ -44,4 +50,4 @@ Package repository:
 Bugs
 -------
   Package is still in primary stage.
-  You can report bugs/ issues [here](https://github.com/Ruturaj4/securepack/issues).
+  You can report bugs/issues [here](https://github.com/Ruturaj4/securepack/issues).
